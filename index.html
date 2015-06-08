@@ -21,6 +21,12 @@
     <!--<script type="text/javascript" language="javascript" src="http://www.datatables.net/release-datatables/media/js/jquery.js"></script>-->
 
     <script src="js/jquery.min.js"></script>
+    <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+</script>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
     <script>
     var calcBin = function(){
       var i = parseInt($('#bin_i').val());
@@ -43,10 +49,11 @@
           nCi = math.factorial(n) / (math.factorial(i) * math.factorial(n-i));
           suc = Math.pow(p, i);
           fail = Math.pow(1-p, n-i);
-          resultText = "X ~ Bin(" + n +", " + p +") ----> P(X = " + i + ") = " + (nCi * suc * fail);
+          resultText = "$$P(X = " + i + ") = {"+ n +" \\choose " + i + "} " + p + "^" + i + "(1-" + p + ")^{" + n + "-1} = " + (nCi * suc * fail) + "$$";
         }
       }
       $('#bin_result').text(resultText);
+      MathJax.Hub.Queue(["Typeset",MathJax.Hub,"bin_result"]);
     }
 
     var calcGeo = function(){
@@ -62,10 +69,11 @@
           resultText = "Probability must be >= 0.";
         } else {
           fail = Math.pow(1-p, i-1);
-          resultText = "X ~ Geo(" + p +") ----> P(X = " + i + ") = " + (p * fail);
+          resultText = "$$P(X = "+ i + ") = "+ p + "(1-" + p + ")^{" + i + "-1}=" + (p * fail) + "$$";
         }
       }
       $('#geo_result').text(resultText);
+      MathJax.Hub.Queue(["Typeset",MathJax.Hub,"geo_result"]);
     }
 
     var calcNegbin = function(){
@@ -84,10 +92,11 @@
           krCi = math.factorial(k+r-1) / (math.factorial(k) * math.factorial(r-1));
           fail = Math.pow(1-p, r);
           suc = Math.pow(p, k);
-          resultText = "X ~ NegBin(" + r + ", " + p +") ----> P(X = " + k + ") = " + (krCi * suc * fail);
+          resultText = "$$P(X = "+k+") = {{"+k+" + "+r+" - 1} \\choose "+k+"} "+p+"^"+k+"(1-"+ p+")^" + r + "=" + (krCi * suc * fail) + "$$";
         }
       }
       $('#negbin_result').text(resultText);
+      MathJax.Hub.Queue(["Typeset",MathJax.Hub,"negbin_result"]);
     }
 
     var calcHypgeo = function(){
@@ -101,18 +110,17 @@
       } else {
         if(N < n){
           resultText = "You cannot have more [specific object]s (" + n + ") than total objects (" + N + ")."
-        } else if(i > n){
-          resultText = "X ~ HypGeo(" + n +", " + N +", " + m + ") ----> P(X = " + i + ") = " + 0;
         } else if(m > N){
           resultText = "You cannot draw more objects (" + m + ") than the number of total objects that exist (" + N + ").";
         } else {
           mCi = math.factorial(m) / (math.factorial(i) * math.factorial(m-i));
           NmCni = math.factorial(N-m) / (math.factorial(n-i) * math.factorial(N- m - n + i));
           Ncn = math.factorial(N) / (math.factorial(n) * math.factorial(N-n));
-          resultText = "X ~ HypGeo(" + n +", " + N +", " + m + ") ----> P(X = " + i + ") = " + mCi * NmCni / Ncn;
+          resultText = "$$P(X = "+i+") = \\frac{{"+m+" \\choose "+i+"}{{"+N+"-"+m+"} \\choose {"+n+"-"+i+"}}}{"+N+" \\choose "+n+"}=" + mCi * NmCni / Ncn +"$$";
         }
       }
       $('#hypgeo_result').text(resultText);
+      MathJax.Hub.Queue(["Typeset",MathJax.Hub,"hypgeo_result"]);
     }
     </script>
 
@@ -158,7 +166,9 @@
           <h3 class="sub-title">
             Calculate the <b><a href="#bin" style="color: black;">probability</a></b> of having <input type="text" value="i"style="width:50px" id="bin_i"> successful trials in total where there are <input type="text" style="width:50px" id="bin_n" value="n"> trials, and each trial is <em>independent</em> with a probablitily <input type="text" style="width:50px" value="p"id="bin_p"> of success.</h3>
           <a class="btn btn-default" href="#bin" onclick="calcBin()">Calculate!</a>
+          <p id="bin_eq">$$P(X = i) = {n \choose i} p^i(1-p)^{n-1}$$</p>
           <p id="bin_result"></p>
+
 
       </div>
     </div>
@@ -174,6 +184,7 @@
         <h3 class="sub-title">
           Calculate the <b><a href="#geo" style="color: black;">probability</a></b> of having <input type="text" value="i" style="width:50px" id="geo_i"> failed trials <b>BEFORE</b> 1 successful trial, where each trial is <em>independent</em> with a probability <input type="text" value="p" style="width:50px" id="geo_p"> of success.</h3>
         <a class="btn btn-default" href="#geo" onclick="calcGeo()">Calculate!</a>
+        <p id="geo_eq">$$P(X = i) = p(1-p)^{i-1}$$</p>
         <p id="geo_result"></p>
       </div>
     </div>
@@ -189,6 +200,7 @@
         <h3 class="sub-title">
           Calculate the <b><a href="#negbin" style="color: black;">probability</a></b> of getting exactly <input type="text" value="k" style="width:50px" id="negbin_k"> successful trials and exactly <input type="text" value="r" style="width:50px" id="negbin_r"> failed trials, where each trial is <em>independent</em> with a probability <input type="text" style="width:50px" value="p" id="negbin_p"> of success.</h3>
         <a class="btn btn-default" href="#negbin" onclick="calcNegbin()">Calculate!</a>
+        <p id="negbin_eq">$$P(X = k) = {{k + r - 1} \choose k} p^k(1-p)^r$$</p>
         <p id="negbin_result"></p>
       </div>
     </div>
@@ -204,6 +216,7 @@
         <h3 class="sub-title">
           Calculate the <b><a href="#hypgeo" style="color: black;">probability</a></b> of drawing <input type="text" value="i" style="width:50px" id="hypgeo_i"> [specific object]s from a bucket containing <input type="text" value="n" style="width:50px" id="hypgeo_n"> of those [specific object]s and <input type="text" value="N" style="width:50px" id="hypgeo_N"> <b>total</b> objects, after <input type="text" value="m" style="width:50px" id="hypgeo_m"> <em>non-independent</em> draws.</h3>
         <a class="btn btn-default" href="#hypgeo" onclick="calcHypgeo()">Calculate!</a>
+        <p id="hypgeo_eq">$$P(X = i) = \frac{{m \choose i}{{N-m} \choose {n-i}}}{N \choose n}$$</p>
         <p id="hypgeo_result"></p>
       </div>
     </div>
