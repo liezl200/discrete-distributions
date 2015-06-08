@@ -43,7 +43,7 @@
         } else if(n < i){
           resultText = "You cannot have more successes + (" + i + ") than total trials (" + n + "."
         } else if (n === 0) {
-          resultText = "P(X = " + i + ") = " + 1;
+          resultText = "$$P(X = " + i + ") = " + 1 + "$$";
         } else {
 
           nCi = math.factorial(n) / (math.factorial(i) * math.factorial(n-i));
@@ -110,6 +110,8 @@
       } else {
         if(N < n){
           resultText = "You cannot have more [specific object]s (" + n + ") than total objects (" + N + ")."
+        } else if(i > n){
+          resultText = "$$P(X = " + i + ") = " + 0+"$$";
         } else if(m > N){
           resultText = "You cannot draw more objects (" + m + ") than the number of total objects that exist (" + N + ").";
         } else {
