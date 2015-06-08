@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>CS 109</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale = 1.0">
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,300,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
+
+    <!--app css-->
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!--<script type="text/javascript" language="javascript" src="http://www.datatables.net/release-datatables/media/js/jquery.js"></script>-->
+
+    <script src="js/jquery.min.js"></script>
+    <script>
+    var calcBin = function(){
+      var i = parseInt($('#bin_i').val());
+      var n = parseInt($('#bin_n').val());
+      var p = parseFloat($('#bin_p').val());
+      var resultText;
+      if(isNaN(i) || isNaN(n) || isNaN(p)){
+        resultText = "Please enter valid numbers.";
+      } else {
+        if(p > 1){
+          resultText = "Probability must be <= 1.";
+        } else if(p < 0){
+          resultText = "Probability must be >= 0.";
+        } else if(n < i){
+          resultText = "You cannot have more successes + (" + i + ") than total trials (" + n + "."
+        } else if (n === 0) {
+          resultText = "P(X = " + i + ") = " + 1;
+        } else {
+
+          nCi = math.factorial(n) / (math.factorial(i) * math.factorial(n-i));
+          suc = Math.pow(p, i);
+          fail = Math.pow(1-p, n-i);
+          resultText = "X ~ Bin(" + n +", " + p +") ----> P(X = " + i + ") = " + (nCi * suc * fail);
+        }
+      }
+      $('#bin_result').text(resultText);
+    }
+
+    var calcGeo = function(){
+      var i = parseInt($('#geo_i').val());
+      var p = parseFloat($('#geo_p').val());
+      var resultText;
+      if(isNaN(i) || isNaN(p)){
+        resultText = "Please enter valid numbers.";
+      } else {
+        if(p > 1){
+          resultText = "Probability must be <= 1.";
+        } else if(p < 0){
+          resultText = "Probability must be >= 0.";
+        } else {
+          fail = Math.pow(1-p, i-1);
+          resultText = "X ~ Geo(" + p +") ----> P(X = " + i + ") = " + (p * fail);
+        }
+      }
+      $('#geo_result').text(resultText);
+    }
+
+    var calcNegbin = function(){
+      var k = parseInt($('#negbin_k').val());
+      var r = parseFloat($('#negbin_r').val());
+      var p = parseFloat($('#negbin_p').val());
+      var resultText;
+      if(isNaN(k) || isNaN(p) || isNaN(r)){
+        resultText = "Please enter valid numbers.";
+      } else {
+        if(p > 1){
+          resultText = "Probability must be <= 1.";
+        } else if(p < 0){
+          resultText = "Probability must be >= 0.";
+        } else {
+          krCi = math.factorial(k+r-1) / (math.factorial(k) * math.factorial(r-1));
+          fail = Math.pow(1-p, r);
+          suc = Math.pow(p, k);
+          resultText = "X ~ NegBin(" + r + ", " + p +") ----> P(X = " + k + ") = " + (krCi * suc * fail);
+        }
+      }
+      $('#negbin_result').text(resultText);
+    }
+
+    var calcHypgeo = function(){
+      var i = parseInt($('#hypgeo_i').val());
+      var n = parseInt($('#hypgeo_n').val());
+      var m = parseInt($('#hypgeo_m').val());
+      var N =parseInt($('#hypgeo_N').val());
+      var resultText;
+      if(isNaN(i) || isNaN(n) || isNaN(m) || isNaN(N)){
+        resultText = "Please enter valid numbers.";
+      } else {
+        if(N < n){
+          resultText = "You cannot have more [specific object]s (" + n + ") than total objects (" + N + ")."
+        } else if(i > n){
+          resultText = "X ~ HypGeo(" + n +", " + N +", " + m + ") ----> P(X = " + i + ") = " + 0;
+        } else if(m > N){
+          resultText = "You cannot draw more objects (" + m + ") than the number of total objects that exist (" + N + ").";
+        } else {
+          mCi = math.factorial(m) / (math.factorial(i) * math.factorial(m-i));
+          NmCni = math.factorial(N-m) / (math.factorial(n-i) * math.factorial(N- m - n + i));
+          Ncn = math.factorial(N) / (math.factorial(n) * math.factorial(N-n));
+          resultText = "X ~ HypGeo(" + n +", " + N +", " + m + ") ----> P(X = " + i + ") = " + mCi * NmCni / Ncn;
+        }
+      }
+      $('#hypgeo_result').text(resultText);
+    }
+    </script>
+
+</head>
+  <body>
+
+<div id="menu">
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menu-content">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          Discrete Distributions
+        </a>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="menu-content">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="#bin">Binomial</a></li>
+          <li><a href="#geo">Geometric</a></li>
+          <li><a href="#negbin">Negative Binomial</a></li>
+          <li><a href="#hypgeo">Hypergeometric</a></li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+</div>
+
+<section id="bin" class="dist">
+  <div class="container">
+    <div class="row sec-header">
+      <div class="col-sm-6 col-sm-offset-3">
+        <h2>Binomial Distribution</h2>
+
+          <div class="sep"></div>
+
+          <h3 class="sub-title">
+            Calculate the <b><a href="#bin" style="color: black;">probability</a></b> of having <input type="text" value="i"style="width:50px" id="bin_i"> successful trials in total where there are <input type="text" style="width:50px" id="bin_n" value="n"> trials, and each trial is <em>independent</em> with a probablitily <input type="text" style="width:50px" value="p"id="bin_p"> of success.</h3>
+          <a class="btn btn-default" href="#bin" onclick="calcBin()">Calculate!</a>
+          <p id="bin_result"></p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="geo" class="dist">
+  <div class="container">
+    <div class="row sec-header">
+      <div class="col-sm-6 col-sm-offset-3">
+        <h2>Geometric</h2>
+        <div class="sep"></div>
+        <h3 class="sub-title">
+          Calculate the <b><a href="#geo" style="color: black;">probability</a></b> of having <input type="text" value="i" style="width:50px" id="geo_i"> failed trials <b>BEFORE</b> 1 successful trial, where each trial is <em>independent</em> with a probability <input type="text" value="p" style="width:50px" id="geo_p"> of success.</h3>
+        <a class="btn btn-default" href="#geo" onclick="calcGeo()">Calculate!</a>
+        <p id="geo_result"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="negbin" class="dist">
+  <div class="container">
+    <div class="row sec-header">
+      <div class="col-sm-6 col-sm-offset-3">
+        <h2>Negative Binomial</h2>
+        <div class="sep"></div>
+        <h3 class="sub-title">
+          Calculate the <b><a href="#negbin" style="color: black;">probability</a></b> of getting exactly <input type="text" value="k" style="width:50px" id="negbin_k"> successful trials and exactly <input type="text" value="r" style="width:50px" id="negbin_r"> failed trials, where each trial is <em>independent</em> with a probability <input type="text" style="width:50px" value="p" id="negbin_p"> of success.</h3>
+        <a class="btn btn-default" href="#negbin" onclick="calcNegbin()">Calculate!</a>
+        <p id="negbin_result"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="hypgeo" class="dist">
+  <div class="container">
+    <div class="row sec-header">
+      <div class="col-sm-6 col-sm-offset-3">
+        <h2>Hypergeometric</h2>
+        <div class="sep"></div>
+        <h3 class="sub-title">
+          Calculate the <b><a href="#hypgeo" style="color: black;">probability</a></b> of drawing <input type="text" value="i" style="width:50px" id="hypgeo_i"> [specific object]s from a bucket containing <input type="text" value="n" style="width:50px" id="hypgeo_n"> of those [specific object]s and <input type="text" value="N" style="width:50px" id="hypgeo_N"> <b>total</b> objects, after <input type="text" value="m" style="width:50px" id="hypgeo_m"> <em>non-independent</em> draws.</h3>
+        <a class="btn btn-default" href="#hypgeo" onclick="calcHypgeo()">Calculate!</a>
+        <p id="hypgeo_result"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<footer class="alt">
+  <div class="container">
+    <div class="row">
+      <p>Liezl Puzon & Louis Brion (CS 109)</p>
+    </div>
+  </div>
+</footer>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/jquery-scrollto.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/math.js"></script>
+  </body>
+</html>
