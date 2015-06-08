@@ -225,21 +225,6 @@ section.alt {
 
 
 
-@media all and (min-width: 768px) and (max-width: 991px) {
-  .lt-wrap-overlay .lt-overlay .excerpt {
-    display: none; } }
-/*----------------------
-/* Reset pretty photo
-/*----------------------*/
-.pp_content_container .pp_nav {
-  width: 100%;
-  float: inherit; }
-.pp_content_container .pp-nav-wrapper {
-  width: 60px;
-  overflow: hidden;
-  margin: 0 auto; }
-
-
 .dist .sec-header {
   margin-bottom: 55px; }
 .dist .item i {
